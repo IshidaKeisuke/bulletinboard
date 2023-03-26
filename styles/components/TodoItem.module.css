@@ -1,0 +1,24 @@
+.update_message, .delete_message {
+	background-color: #4caf50;
+	color: #ffffff;
+	animation: slideIn 1s ease-out forwards;
+	display: inline-block;
+	padding: 4px 8px;
+}
+
+/* .delete_message{
+	background-color: orange;
+	color: #ffffff;
+	animation: slideIn 1s ease-out forwards;
+	display: inline-block;
+	padding: 4px 8px;
+} */
+
+@keyframes slideIn {
+	0% {
+	  transform: translateX(-100%);
+	}
+	100% {
+	  transform: translateX(0);
+	}
+}
