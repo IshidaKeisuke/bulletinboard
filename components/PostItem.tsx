@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { DELETE_TODO, UPDATE_TODO } from '../lib/graphqlQueries';
-import { Todo } from '../types';
-import TodoItemCss from '../styles/components/TodoItem.module.css';
+import { Post } from '../types';
+import PostItemCss from '../styles/components/PostItem.module.css';
 
 type Props = {
-  todo: Todo;
+  post: Post;
   onDelete: (id: string) => void;
   onEdit: (id: string, title: string, body: string) => void;
 };
 
-const TodoItem: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
+export const PostItem: React.FC<Props> = ({ post, onDelete, onEdit }) => {
   const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState(todo?.title || '');
-  const [body, setBody] = useState(todo?.body || '');
-  const [updateTodo] = useMutation(UPDATE_TODO);
-  const [deleteTodo] = useMutation(DELETE_TODO);
+  const [title, setTitle] = useState(post?.title || '');
+  const [body, setBody] = useState(post?.body || '');
+  const [updatePost] = useMutation(UPDATE_TODO);
+  const [deletePost] = useMutation(DELETE_TODO);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [deleteStatus, setDeleteStatus] = useState(false);
 
   const handleUpdate = async () => {
-    if (todo && (title !== todo.title || body !== todo.body)) {
-      await updateTodo({
-        variables: { id: todo.id, title, body },
+    if (post && (title !== post.title || body !== post.body)) {
+      await updatePost({
+        variables: { id: post.id, title, body },
       });
-      onEdit(todo.id, title, body);
+      onEdit(post.id, title, body);
       setUpdateStatus(true);
     }
     setEditing(false);
@@ -32,10 +32,10 @@ const TodoItem: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
 
   const handleDelete = async () => {
     try {
-      await deleteTodo({
-        variables: { id: todo?.id },
+      await deletePost({
+        variables: { id: post?.id },
       });
-      onDelete(todo?.id || "");
+      onDelete(post?.id || "");
       setDeleteStatus(true); // 削除成功時にステータスを変更
     } catch (error) {
       console.error(error);
@@ -46,8 +46,8 @@ const TodoItem: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
     setEditing(false);
   };
 
-  if (!todo) {
-    return <div>Todo is not found</div>;
+  if (!post) {
+    return <div>Post is not found</div>;
   }
 
   return (
@@ -70,20 +70,18 @@ const TodoItem: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
         </>
       ) : (
         <div>
-          <span onDoubleClick={() => setEditing(true)}>{todo.title}</span>
+          <span onDoubleClick={() => setEditing(true)}>{post.title}</span>
           <br />
-          <span onDoubleClick={() => setEditing(true)}>{todo.body}</span>
+          <span onDoubleClick={() => setEditing(true)}>{post.body}</span>
           <button onClick={() => setEditing(true)}>Edit</button>
           {updateStatus && (
-            <p className={TodoItemCss.update_message}>更新が完了しました</p>
+            <p className={PostItemCss.update_message}>更新が完了しました</p>
           )}
           {deleteStatus && (
-            <p className={TodoItemCss.delete_message}>正常に削除しました</p>
+            <p className={PostItemCss.delete_message}>正常に削除しました</p>
           )}
         </div>
       )}
     </div>
   );
 };
-
-export default TodoItem;

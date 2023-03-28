@@ -4,20 +4,20 @@ import Link from 'next/link'
 import { ApolloProvider } from '@apollo/client';
 import { GET_TODOS, ADD_TODO } from '../lib/graphqlQueries';
 import { initializeApollo } from '../lib/apolloClient';
-import TodoItem from '../components/TodoItem';
-import { Todo } from '../types';
+import { PostItem } from '../components/PostItem';
+import { Post } from '../types';
 
-const Todos: NextPage = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+const Posts: NextPage = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const apolloClient = initializeApollo();
-  const fetchTodos = async () => {
+  const fetchPosts = async () => {
     const { data } = await apolloClient.query({ query: GET_TODOS });
-    setTodos(data.todos);
+    setPosts(data.posts);
   };
   useEffect(() => {
-    fetchTodos();
+    fetchPosts();
   }, []);
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,28 +26,30 @@ const Todos: NextPage = () => {
       mutation: ADD_TODO,
       variables: { title, body },
     });
-    setTodos([data.insert_todos_one, ...todos]);
+    setPosts([data.insert_posts_one, ...posts]);
     setTitle('');
     setBody('');
   };
-  const handleDeleteTodo = async (id: string) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+  const handleDeletePost = async (id: string) => {
+    const newPosts = posts.filter((post) => post.id !== id);
+    setPosts(newPosts);
   };
-  const handleEditTodo = (id: string, newTitle: string, newBody: string) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, title: newTitle, body: newBody };
+  const handleEditPost = (id: string, newTitle: string, newBody: string) => {
+    const newPosts = posts.map((post) => {
+      if (post.id === id) {
+        return { ...post, title: newTitle, body: newBody };
       }
-      return todo;
+      return post;
     });
-    setTodos(newTodos);
+    setPosts(newPosts);
   };
 
   return (
     <ApolloProvider client={apolloClient}>
       <div>
-        <h1>Todos</h1>
+        <h1>Posts</h1>
+        <Link href="/auth/signin">ログイン</Link>
+        <Link href="/auth/signup">会員登録</Link>
         <Link href="/posts">投稿してみる</Link>
         <form onSubmit={handleFormSubmit}>
           <input
@@ -60,18 +62,18 @@ const Todos: NextPage = () => {
             value={body}
             onChange={(e) => setBody(e.target.value)}
           />
-          <button type="submit">Add Todo</button>
+          <button type="submit">Add Post</button>
         </form>
-        {todos.map((todo) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            onDelete={handleDeleteTodo}
-            onEdit={handleEditTodo}
+        {posts.map((post) => (
+          <PostItem
+            key={post.id}
+            post={post}
+            onDelete={handleDeletePost}
+            onEdit={handleEditPost}
           />
         ))}
       </div>
     </ApolloProvider>
   );
 };
-export default Todos;
+export default Posts;

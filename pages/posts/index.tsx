@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const registerUser = async (email: string, password: string) => {
+const SignUp = async (email: string, password: string) => {
 	try {
 	  const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 	  const idToken = await userCredential.user?.getIdToken();
@@ -92,7 +92,7 @@ const Posts: NextPage = () => {
 			event.preventDefault();
 			const email = (document.getElementById("email") as HTMLInputElement).value;
 			const password = (document.getElementById("password") as HTMLInputElement).value;
-			registerUser(email, password);
+			SignUp(email, password);
 		}}
 		>
 		<label htmlFor="email">Email</label>
@@ -104,7 +104,7 @@ const Posts: NextPage = () => {
 				event.preventDefault();
 				const email = (document.getElementById("email") as HTMLInputElement).value;
 				const password = (document.getElementById("password") as HTMLInputElement).value;
-				registerUser(email, password);
+				SignUp(email, password);
 			}}
 			>
 			Register
