@@ -1,9 +1,9 @@
 import { SignUp } from '../../lib/firebase/auth'
-import { AuthForm } from './AuthForm';
+import { SignUpForm } from './SignUpForm';
 
 export const UserSignUp = () => {
   	return (
-		AuthForm(SignUp, "登録する")
+		<SignUpForm />
 	);
 }
 

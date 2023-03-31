@@ -1,5 +1,5 @@
 import { SignIn } from '../../lib/firebase/auth'
-import { AuthForm } from './AuthForm';
+import { AuthForm } from './SignInForm';
 
 export const UserSignIn = () => {
   	return (

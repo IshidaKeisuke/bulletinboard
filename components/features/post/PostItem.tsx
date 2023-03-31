@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { DELETE_TODO, UPDATE_TODO } from '../lib/graphqlQueries';
-import { Post } from '../types';
-import PostItemCss from '../styles/components/PostItem.module.css';
+
+import { DELETE_TODO, UPDATE_TODO } from '../../../lib/graphqlQueries';
+import { Post } from '../../../types';
+import PostItemCss from '../../../styles/components/PostItem.module.css';
 
 type Props = {
   post: Post;

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ApolloProvider } from '@apollo/client';
 import { GET_TODOS, ADD_TODO } from '../lib/graphqlQueries';
 import { initializeApollo } from '../lib/apolloClient';
-import { PostItem } from '../components/PostItem';
+import { PostItem } from '../components/features/post/PostItem';
 import { Post } from '../types';
 
 const Posts: NextPage = () => {
