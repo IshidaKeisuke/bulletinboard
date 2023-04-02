@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { SignUp } from "@/lib/firebase/auth";
-import { TextField, Button, Box, Paper, Typography } from "@material-ui/core";
+import { TextField, Button, Box, Paper, Typography } from "@material-ui/core/styles";
 import { useStyles } from "@/styles/components/form/formStyle"
 
 export const SignUpForm = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       const result = await SignUp(email, password);
