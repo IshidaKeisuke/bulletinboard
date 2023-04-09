@@ -1,33 +1,4 @@
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-form {
-  display: flex;
-  margin-top: 1rem;
-}
-
-input {
-  flex-grow: 1;
-  padding: 0.5rem;
-  margin-right: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  background-color: #0070f3;
-  border: 1px solid #0070f3;
-  color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: white;
-  color: #0070f3;
-}
-
+a {
+	text-decoration: none;
+  }
+  

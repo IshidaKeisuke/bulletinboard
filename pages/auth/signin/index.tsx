@@ -6,7 +6,7 @@ import UserLogin from '../../../components/auth/SignIn'
 const SignIn: NextPage = () => {
 	return(
 		<>
-			<h2>サインイン</h2>
+			<Link href="/">トップへ</Link>
 			<UserLogin />
 		</>
 	)

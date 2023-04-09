@@ -1,25 +1,21 @@
-import { makeStyles } from '@material-ui/core/styles';
+import styled from "@emotion/styled";
+import { Box } from "@mui/material";
 
-export const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: "500px",
-    margin: "auto",
-    padding: "2rem",
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: "2rem",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "1rem",
-  },
-  input: {
-    marginBottom: "1rem",
-  },
-  submitButton: {
-    marginTop: "1rem",
-  },
-}));
+export const Container = styled("div")`
+  width: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`;
+
+export const StyledBox = styled(Box)`
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 4rem;
+  margin: auto;
+  width: 100%;
+  max-width: 400px;
+`;

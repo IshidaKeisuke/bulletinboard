@@ -1,72 +1,49 @@
 import Router from 'next/router';
 import { useState, useEffect } from 'react';
+import { createUser } from "@/lib/hasura/user";
 import firebase from './firebsae_config';
 
 export const SignUp = async (email: string, password: string) => {
-	try {
-		const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-		const idToken = await userCredential.user?.getIdToken();
-		const userId = userCredential.user?.uid;
-		const userEmail = userCredential.user?.email;
-		if (idToken && userId && userEmail) {
-			await userCredential.user?.sendEmailVerification();
-			// 仮登録が完了するまで待つ
-			await firebase.auth().currentUser?.reload();
-			// メール認証が完了したかどうかを確認する
-			const isEmailVerified = firebase.auth().currentUser?.emailVerified;
-			if (isEmailVerified) {
-				const graphqlEndpoint = process.env.NEXT_PUBLIC_HASURA_ENDPOINT;
-				const adminSecret = process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ADMIN_SECRET;
-				if (!graphqlEndpoint || !adminSecret) {
-					throw new Error("Hasura endpoint or admin secret is missing.");
-				}
-				const query = `
-				mutation ($userId: String!, $userEmail: String) {
-					insert_users(objects: [{
-					id: $userId,
-					email: $userEmail,
-					last_seen: "now()"
-					}], on_conflict: {
-					constraint: users_pkey,
-					update_columns: [last_seen, email]
-					}) {
-					affected_rows
-					}
-				}
-				`;
-				const variables = { userId: userId, userEmail: userEmail };
-				const response = await fetch(graphqlEndpoint, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"x-hasura-admin-secret": adminSecret,
-						Authorization: `Bearer ${idToken}`,
-					},
-					body: JSON.stringify({ query, variables }),
-				});
-				if (!response.ok) {
-					throw new Error("Failed to send data to Hasura.");
-				}
-				return response;
-			} else {
-				throw new Error("Email is not verified yet.");
-			}
-		}
-	} catch (error) {
-		console.error(error);
-	}
-};
+    try {
+		// Firebase Authenticationにメールアドレスとパスワードを登録する
+		await firebase.auth().createUserWithEmailAndPassword(email, password);
+  
+		// メール送信設定
+		const actionCodeSettings = {
+		  url: process.env.NEXT_PUBLIC_APP_URL,
+		  handleCodeInApp: true,
+		};
+  
+		// 確認メールを送信する
+		await firebase.auth().currentUser?.sendEmailVerification(actionCodeSettings);
 
+		// Firebase Authenticationでログインしていない場合は自動でログインする
+		if (!firebase.auth().currentUser) {
+		  await firebase.auth().signInWithEmailAndPassword(email, password);
+		}
+  
+		// Hasuraでユーザーを作成する
+		await createUser({
+		  userId: firebase.auth().currentUser?.uid,
+		  userEmail: email,
+		  initialUserName: initialUserName,
+		  idToken: await firebase.auth().currentUser?.getIdToken()
+		});
+  
+	  } catch (error) {
+		console.error(error);
+	  }
+  
+};
 
 export const SignIn = async(email: string, password: string) => {
 	try {
 		const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
 		const user = userCredential.user;
-		Router.push('/')
 		if(user){
 			const successfuleMessage = "ログインに成功しました"
-			
 			const idToken = await user.getIdToken();
+			Router.push('/')
 		}
 	} catch(error) {
 		console.log(error)
